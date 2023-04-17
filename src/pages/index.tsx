@@ -26,6 +26,7 @@ export default function Home() {
   
   // Get the artices from the United State API
   const getArticles = async () => {
+    // Get all the artcles.
     const response = await fetch(
       `/api/news-feed`
       );
