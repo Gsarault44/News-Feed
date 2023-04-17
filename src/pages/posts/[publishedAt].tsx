@@ -20,12 +20,12 @@ const Post: NextPage = () => {
   const [article, setArticle] = useState<articleType>();
 
   const getArticle = async () => {
+    // get articles from API
     const response = await fetch(
       `/api/news-feed`
     );
 
     const {articles, status, message} = await response.json();
-    console.log(articles)
       // check to see if there are any articles
     if (articles && articles.length > 0) {
       // Filter out the articles to only show the one that matches the query
@@ -39,6 +39,7 @@ const Post: NextPage = () => {
         )[0]
       );
     } else if (status == 'error') {
+      // return error message
       console.error(message);
     }
   }
@@ -60,7 +61,6 @@ const Post: NextPage = () => {
           <Link href='/'>Back</Link>
         </header>
         <div className={styles.grid}>
-          {console.log(article)}
           {article && 
             <div className={styles.postContent}>
               <h1>{article.title}</h1>

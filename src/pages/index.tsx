@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 import { Data } from './api/news-feed';
-
-const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
   const [articles, setArticles] = useState([]);
@@ -16,6 +12,7 @@ export default function Home() {
   const [location, setLocation] = useState("United States");
 
 
+  // Get the categoreis based on source or author depending on API data avaiable.
   const getCategories = (articles: any) => {
     const cats: string[] = []
     articles.map((article: Data) => {
@@ -27,6 +24,7 @@ export default function Home() {
     setCategories(newCats);
   }
   
+  // Get the artices from the United State API
   const getArticles = async () => {
     const response = await fetch(
       `/api/news-feed`
@@ -43,6 +41,7 @@ export default function Home() {
     setLocation("United States");
   }
 
+  // Get the articles from the Great Britain API 
   const getUkArticles = async () => {
     const response = await fetch(
       `/api/news-feed-uk`
@@ -59,6 +58,7 @@ export default function Home() {
     setLocation("Great Britain");
   }
 
+  // filter articles by title based on text input 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) =>{
     const results = staticArticlesList.filter((post: Data) => {
       if (event.target.value === "") return articles
@@ -70,6 +70,7 @@ export default function Home() {
     setArticles(results);
   };
 
+  // Filter articles base on author from Great Britain api
   const filterArticles = (event: any) => {
     const results = staticArticlesList.filter((post: Data) => {
       if (event === "") return articles
@@ -79,11 +80,13 @@ export default function Home() {
     setMenuState(false);
   }
 
+  // Toggle the menu to show categories
   const openMenu = () => {
     setMenuState(!menuState);
     getCategories(staticArticlesList);
   }
 
+  // Reset to show all articles
   const reset = () => {
     setArticles(staticArticlesList);
   }

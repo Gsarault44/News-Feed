@@ -20,6 +20,7 @@ const Post: NextPage = () => {
   const [article, setArticle] = useState<articleType>();
 
   const getArticle = async () => {
+    // Get articles from API
     const response = await fetch(
       `/api/news-feed-uk`
     );
@@ -39,6 +40,7 @@ const Post: NextPage = () => {
         )[0]
       );
     } else if (status == 'error') {
+      // return error message
       console.error(message);
     }
   }
