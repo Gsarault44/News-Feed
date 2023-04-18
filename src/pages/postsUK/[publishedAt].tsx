@@ -14,39 +14,31 @@ interface articleType {
 }
 
 const Post: NextPage = () => {
-
-  const router = useRouter()
-  const { publishedAt } = router.query
   const [article, setArticle] = useState<articleType>();
 
-  const getArticle = async () => {
-    // Get articles from API
-    const response = await fetch(
-      `/api/news-feed-uk`
-    );
-
-    const {articles, status, message} = await response.json();
-    console.log(articles)
-      // check to see if there are any articles
-    if (articles && articles.length > 0) {
-      // Filter out the articles to only show the one that matches the query
-      articles.filter((article: Data) => 
-        article.publishedAt == publishedAt
-      )
-      // Set the article to the state
-      setArticle(
-        articles.filter((article: Data) => 
-          article.publishedAt == publishedAt
-        )[0]
-      );
-    } else if (status == 'error') {
-      // return error message
-      console.error(message);
-    }
-  }
 
 
   useEffect(() => {
+    console.log()
+    const getArticle = async () => {
+      // Get articles from API
+      const response = await fetch(
+        `/api/news-feed-uk`
+      );
+  
+      const {articles, status, message} = await response.json();
+      // check to see if there are any articles
+      if (articles && articles.length > 0) {
+        // Filter out the articles to only show the one that matches the query
+        // Set the article to the state
+        const filteredArticle = articles.filter((article: Data) => article.publishedAt == window.location.pathname.split("/").pop());
+        setArticle(filteredArticle[0]);
+        
+      } else if (status == 'error') {
+        // return error message
+        console.error(message);
+      }
+    }
     getArticle();
   }, []);
 

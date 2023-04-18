@@ -15,37 +15,31 @@ interface articleType {
 
 const Post: NextPage = () => {
 
-  const router = useRouter()
-  const { publishedAt } = router.query
   const [article, setArticle] = useState<articleType>();
-
-  const getArticle = async () => {
-    // get articles from API
-    const response = await fetch(
-      `/api/news-feed`
-    );
-
-    const {articles, status, message} = await response.json();
-      // check to see if there are any articles
-    if (articles && articles.length > 0) {
-      // Filter out the articles to only show the one that matches the query
-      articles.filter((article: Data) => 
-        article.publishedAt == publishedAt
-      )
-      // Set the article to the state
-      setArticle(
-        articles.filter((article: Data) => 
-          article.publishedAt == publishedAt
-        )[0]
-      );
-    } else if (status == 'error') {
-      // return error message
-      console.error(message);
-    }
-  }
-
-
+  const [isLoading, setLoading] = useState(true);
+  
+  
+  
   useEffect(() => {
+    const getArticle = async () => {
+      // get articles from API
+      const response = await fetch(
+        `/api/news-feed`
+        );
+        
+        const {articles, status, message} = await response.json();
+        // check to see if there are any articles
+        if (articles && articles.length > 0) {
+          // Filter out the articles to only show the one that matches the query
+        const filteredArticle = articles.filter((article: Data) => article.publishedAt == window.location.pathname.split("/").pop());
+          setArticle(filteredArticle[0]);
+      } else if (status == 'error') {
+        // return error message
+        console.error(message);
+      }
+  
+        setLoading(false);
+    }
     getArticle();
   }, []);
 
@@ -61,13 +55,13 @@ const Post: NextPage = () => {
           <Link href='/'>Back</Link>
         </header>
         <div className={styles.grid}>
-          {article && 
+          {(article?.title && isLoading) ? <div className={styles.loading}>Loading...</div> :
             <div className={styles.postContent}>
-              <h1>{article.title}</h1>
-              <img src={article.urlToImage} />
-              <p>{article.author}</p>
+              <h1>{article?.title}</h1>
+              <img src={article?.urlToImage} />
+              <p>{article?.author}</p>
               <div>
-                {article.content}
+                {article?.content}
               </div>
             </div>
           }
